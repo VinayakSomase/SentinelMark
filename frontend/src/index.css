@@ -1,51 +1,81 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+/* ── SentinelMark Global Styles ── */
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Reset */
+html { scroll-behavior: smooth; }
+
 body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background-color: #020617; /* dark base */
+  background: #0a0f1a;
+  color: #e2e8f0;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Fade animation */
-.fade {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #060d1a; }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
-.fade.show {
-  opacity: 1;
-  transform: translateY(0);
+/* ── Selection ── */
+::selection { background: rgba(29,78,216,0.3); color: #f1f5f9; }
+
+/* ── Focus visible ── */
+:focus-visible { outline: 2px solid rgba(59,130,246,0.5); outline-offset: 2px; }
+
+/* ── Page padding for fixed navbar ── */
+#root > div > div:not(nav) {
+  padding-top: 64px;
 }
 
-/* Card hover */
-.card-hover {
-  transition: all 0.3s ease;
+/* ── Page wrapper ── */
+.page-wrapper {
+  padding-top: 64px;
 }
 
-.card-hover:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+/* ── Utility classes ── */
+.text-primary   { color: #f1f5f9; }
+.text-secondary { color: #94a3b8; }
+.text-muted     { color: #475569; }
+.text-blue      { color: #60a5fa; }
+.text-green     { color: #22c55e; }
+.text-red       { color: #f87171; }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Button glow */
-.btn-glow {
-  transition: all 0.3s ease;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-.btn-glow:hover {
-  transform: scale(1.07);
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
-}
+/* ── Transition defaults ── */
+a { transition: color 0.2s ease; }
+button { transition: all 0.2s ease; }
 
-/* Make links clean */
-a {
-  text-decoration: none;
+/* ── Remove default styles ── */
+ul { list-style: none; }
+button { font-family: inherit; }
+select { font-family: inherit; }
+input  { font-family: inherit; }
+
+/* ── Responsive helpers ── */
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+}
+@media (min-width: 769px) {
+  .hide-desktop { display: none !important; }
 }

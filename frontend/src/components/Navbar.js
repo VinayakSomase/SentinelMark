@@ -1,50 +1,126 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const navLinks = [
+  { label: "Home", to: "/" },
+  { label: "Register Asset", to: "/register" },
+  { label: "Detect Leak", to: "/detect" },
+];
 
 function Navbar() {
-  return (
-    <nav style={styles.navbar}>
-      <div style={styles.logo}>🛡 SentinelMark</div>
+  const location = useLocation();
 
-      <div style={styles.navLinks}>
-        <Link to="/" style={styles.link}>Home</Link>
-        <Link to="/register" style={styles.link}>Register Asset</Link>
-        <Link to="/detect" style={styles.link}>Detect Leak</Link>
+  return (
+    <nav style={styles.nav}>
+      <div style={styles.navInner}>
+        {/* Logo */}
+        <Link to="/" style={styles.logo}>
+          <span style={styles.logoIcon}>🛡️</span>
+          <div>
+            <div style={styles.logoText}>SentinelMark</div>
+            <div style={styles.logoSub}>ANTI-PIRACY INTELLIGENCE</div>
+          </div>
+        </Link>
+
+        {/* Nav Links - each highlights when active */}
+        <div style={styles.navLinks}>
+          {navLinks.map((link) => {
+            const isActive =
+              link.to === "/"
+                ? location.pathname === "/"
+                : location.pathname.startsWith(link.to);
+
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                style={{
+                  ...styles.navLink,
+                  ...(isActive ? styles.navLinkActive : {}),
+                }}
+              >
+                {link.label}
+                {isActive && <span style={styles.activeDot} />}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
 }
 
 const styles = {
-  navbar: {
-    width: "100%",
+  nav: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    background: "rgba(8, 10, 20, 0.85)",
+    backdropFilter: "blur(12px)",
+    borderBottom: "1px solid rgba(255,255,255,0.06)",
+    fontFamily: "'DM Sans', sans-serif",
+  },
+  navInner: {
+    maxWidth: "1100px",
+    margin: "0 auto",
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
-    padding: "12px 40px",
-    backgroundColor: "#0f172a",
-    boxSizing: "border-box",   // 🔥 IMPORTANT FIX
+    justifyContent: "space-between",
+    padding: "0 1.5rem",
+    height: "64px",
   },
-
   logo: {
-    color: "#38bdf8",
-    fontSize: "20px",
-    fontWeight: "bold",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    textDecoration: "none",
   },
-
+  logoIcon: { fontSize: "20px" },
+  logoText: {
+    fontFamily: "'Syne', sans-serif",
+    fontSize: "16px",
+    fontWeight: "700",
+    letterSpacing: "-0.01em",
+    lineHeight: 1.2,
+    color: "#ffffff",
+  },
+  logoSub: {
+    fontSize: "9px",
+    color: "#3b82f6",
+    letterSpacing: "0.08em",
+    fontWeight: "500",
+  },
   navLinks: {
     display: "flex",
-    gap: "20px",
-    flexWrap: "wrap",   // 🔥 prevents overflow
+    alignItems: "center",
+    gap: "4px",
   },
-
-  link: {
-    color: "white",
-    textDecoration: "none",
+  navLink: {
+    position: "relative",
     padding: "8px 16px",
-    background: "#1e293b",
     borderRadius: "8px",
-    transition: "0.3s",
+    fontSize: "14px",
+    fontWeight: "500",
+    color: "rgba(255,255,255,0.55)",
+    textDecoration: "none",
+    transition: "color 0.2s ease, background 0.2s ease",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "4px",
+  },
+  navLinkActive: {
+    color: "#ffffff",
+    background: "rgba(59, 130, 246, 0.15)",
+    border: "1px solid rgba(59, 130, 246, 0.3)",
+  },
+  activeDot: {
+    width: "4px",
+    height: "4px",
+    borderRadius: "50%",
+    background: "#3b82f6",
+    display: "block",
   },
 };
 
