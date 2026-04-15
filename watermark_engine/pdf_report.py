@@ -64,139 +64,129 @@
 #     )
 #     print("Open evidence_report.pdf in your folder to check it")
 
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+print("RUNNING PDF FILE...")
+
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import uuid
+import os
 
+# ===============================
+# MAIN FUNCTION
+# ===============================
 def generate_evidence_report(asset_id, distributor_name,
                             registered_at, detected_at,
                             confidence, output_path):
 
-    c = canvas.Canvas(output_path, pagesize=letter)
-    width, height = letter
+    styles = getSampleStyleSheet()
+    doc = SimpleDocTemplate(output_path)
 
-    # ===== UNIQUE REPORT ID =====
-    report_id = str(uuid.uuid4())[:8].upper()
+    elements = []
 
     # ===== HEADER =====
-    c.setFillColorRGB(0.07, 0.12, 0.22)
-    c.rect(0, height - 100, width, 100, fill=1)
+    elements.append(Paragraph("<b>SentinelMark</b>", styles['Title']))
+    elements.append(Paragraph("Digital Piracy Intelligence System", styles['Normal']))
+    elements.append(Spacer(1, 10))
 
-    c.setFillColorRGB(1, 1, 1)
-    c.setFont("Helvetica-Bold", 26)
-    c.drawString(40, height - 55, "SentinelMark")
-
-    c.setFont("Helvetica", 13)
-    c.drawString(40, height - 75, "Digital Piracy Intelligence System")
-
-    # Report ID (top right)
-    c.setFont("Helvetica", 10)
-    c.drawRightString(width - 40, height - 50, f"Report ID: {report_id}")
+    report_id = str(uuid.uuid4())[:8].upper()
+    elements.append(Paragraph(f"Report ID: <b>{report_id}</b>", styles['Normal']))
+    elements.append(Spacer(1, 20))
 
     # ===== TITLE =====
-    c.setFillColorRGB(0, 0, 0)
-    c.setFont("Helvetica-Bold", 20)
-    c.drawString(40, height - 140, "Forensic Evidence Report")
+    elements.append(Paragraph("<b>FORENSIC EVIDENCE REPORT</b>", styles['Heading2']))
+    elements.append(Spacer(1, 10))
 
     # ===== STATUS BADGE =====
-    c.setFillColorRGB(0.85, 0.15, 0.15)
-    c.roundRect(width - 180, height - 160, 130, 30, 10, fill=1)
+    status = Paragraph(
+        "<font color='white'><b> LEAK CONFIRMED </b></font>",
+        styles['Normal']
+    )
 
-    c.setFillColorRGB(1, 1, 1)
-    c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(width - 115, height - 140, "LEAK DETECTED")
+    status_table = Table([[status]])
+    status_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.darkred),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('PADDING', (0, 0), (-1, -1), 6),
+    ]))
 
-    # ===== MAIN CARD =====
-    c.setFillColorRGB(0.96, 0.97, 0.98)
-    c.roundRect(30, height - 430, width - 60, 260, 12, fill=1)
+    elements.append(status_table)
+    elements.append(Spacer(1, 20))
 
-    # ===== DATA =====
+    # ===== DATA TABLE =====
     data = [
-        ("Asset ID", asset_id),
-        ("Leaked By", distributor_name),
-        ("Registered At", registered_at),
-        ("Detected At", detected_at),
-        ("Confidence", f"{confidence}%"),
-        ("Generated On", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        ["Asset ID", asset_id],
+        ["Leaked By", f"<b>{distributor_name}</b>"],
+        ["Registered At", registered_at],
+        ["Detected At", detected_at],
+        ["Confidence", f"{confidence}%"],
+        ["Generated On", datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
     ]
 
-    y = height - 190
+    table = Table(data, colWidths=[150, 300])
 
-    for label, value in data:
-        c.setFillColorRGB(0.4, 0.4, 0.4)
-        c.setFont("Helvetica", 11)
-        c.drawString(50, y, label)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+    ]))
 
-        c.setFillColorRGB(0.1, 0.1, 0.1)
-        c.setFont("Helvetica-Bold", 13)
-        c.drawRightString(width - 50, y, value)
+    elements.append(table)
+    elements.append(Spacer(1, 20))
 
-        # divider line
-        c.setStrokeColorRGB(0.85, 0.85, 0.85)
-        c.setLineWidth(1)
-        c.line(50, y - 10, width - 50, y - 10)
+    # ===== CONFIDENCE =====
+    elements.append(Paragraph(
+        f"<b>Watermark Match Confidence:</b> {confidence}%",
+        styles['Normal']
+    ))
 
-        y -= 35
+    elements.append(Spacer(1, 20))
 
-    # ===== CONFIDENCE BAR =====
-    bar_x = 50
-    bar_y = height - 460
-    bar_width = width - 100
-    bar_height = 20
+    # ===== LEGAL =====
+    elements.append(Paragraph("<b>⚠ LEGAL WARNING</b>", styles['Heading3']))
 
-    # background
-    c.setFillColorRGB(0.85, 0.85, 0.85)
-    c.roundRect(bar_x, bar_y, bar_width, bar_height, 10, fill=1)
+    elements.append(Paragraph(
+        "This report is generated using forensic watermarking techniques. "
+        "Unauthorized redistribution of digital content is punishable by law.",
+        styles['Normal']
+    ))
 
-    # fill (based on confidence)
-    fill_width = (confidence / 100) * bar_width
-    c.setFillColorRGB(0.2, 0.7, 0.3)
-    c.roundRect(bar_x, bar_y, fill_width, bar_height, 10, fill=1)
-
-    # text
-    c.setFillColorRGB(0, 0, 0)
-    c.setFont("Helvetica-Bold", 11)
-    c.drawCentredString(width / 2, bar_y + 5,
-                        f"Watermark Match Confidence: {confidence}%")
-
-    # ===== LEGAL WARNING BOX =====
-    c.setFillColorRGB(0.9, 0.2, 0.2)
-    c.roundRect(30, 120, width - 60, 60, 10, fill=1)
-
-    c.setFillColorRGB(1, 1, 1)
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, 155, "⚠ LEGAL WARNING")
-
-    c.setFont("Helvetica", 10)
-    c.drawString(50, 140,
-        "This report is generated using forensic watermark analysis.")
-    c.drawString(50, 125,
-        "Unauthorized redistribution of content is legally punishable.")
+    elements.append(Spacer(1, 30))
 
     # ===== FOOTER =====
-    c.setFillColorRGB(0.07, 0.12, 0.22)
-    c.rect(0, 0, width, 50, fill=1)
+    elements.append(Paragraph(
+        "© 2026 SentinelMark | Digital Content Protection System",
+        styles['Normal']
+    ))
 
-    c.setFillColorRGB(1, 1, 1)
-    c.setFont("Helvetica", 10)
-    c.drawCentredString(width / 2, 20,
-        "© 2026 SentinelMark | Secure Digital Content Tracking System")
+    # ===== BUILD PDF =====
+    doc.build(elements)
 
-    c.save()
-    print(f"Premium PDF saved: {output_path}")
+    print(f"🔥 PDF GENERATED: {output_path}")
 
 
-# ===== TEST RUN =====
+# ===============================
+# RUN TEST (AUTO GENERATE)
+# ===============================
 if __name__ == "__main__":
+
+    print("CALLING FUNCTION...")
+
+    # ✅ Create unique filename
+    filename = f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+
+    # ✅ Save in same folder
+    output_path = os.path.join(os.path.dirname(__file__), filename)
+
     generate_evidence_report(
         asset_id="ASSET-001",
         distributor_name="StarSports East",
         registered_at="2026-04-12 14:00",
         detected_at="2026-04-13 09:22",
         confidence=97.4,
-        output_path="premium_evidence_report.pdf"
+        output_path=output_path
     )
-
-    

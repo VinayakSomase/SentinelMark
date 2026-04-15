@@ -236,6 +236,11 @@ def generate_honeypot_variants(input_video_path, output_folder):
 
     os.makedirs(output_folder, exist_ok=True)
 
+    # 🔴 Check input video
+    if not os.path.exists(input_video_path):
+        print("❌ Input video not found")
+        return
+
     variants = []
 
     modifications = [
@@ -250,6 +255,10 @@ def generate_honeypot_variants(input_video_path, output_folder):
 
         cap = cv2.VideoCapture(input_video_path)
 
+        if not cap.isOpened():
+            print("❌ Error opening input video")
+            return
+
         # ✅ FPS FIX
         fps = cap.get(cv2.CAP_PROP_FPS)
         if fps <= 0 or fps is None:
@@ -258,15 +267,19 @@ def generate_honeypot_variants(input_video_path, output_folder):
         w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
+        # 🔴 Safety check
+        if w == 0 or h == 0:
+            print("❌ Invalid video dimensions")
+            return
+
         output_path = f"{output_folder}/{trap_id}_{mod['name']}.avi"
 
-        # ✅ Stable codec
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        # ✅ Windows compatible codec
+        fourcc = cv2.VideoWriter_fourcc(*'MJPG')
         out = cv2.VideoWriter(output_path, fourcc, fps, (w, h))
 
-        # ✅ Check writer
         if not out.isOpened():
-            print("❌ VideoWriter failed")
+            print("❌ VideoWriter failed to open")
             return
 
         frame_count = 0

@@ -44,3 +44,18 @@ Thumbs.db
 .ipynb_checkpoints/
 
 node_modules/
+
+# Ignore generated videos and folders
+watermark_engine/honeypots/
+uploads/
+
+# Ignore video files
+*.avi
+*.mp4
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore PDF reports (optional but recommended)
+*.pdf

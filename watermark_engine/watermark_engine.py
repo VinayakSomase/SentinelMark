@@ -381,8 +381,11 @@
 import numpy as np
 import cv2
 
-PIXELS_PER_BIT = 1000  # Increased for robustness
+PIXELS_PER_BIT = 1000  # Robust watermarking
 
+# ===============================
+# Embed ID into frame
+# ===============================
 def embed_id(frame, distributor_id):
     binary = format(distributor_id, '032b')
     flat = frame.flatten().astype(np.int32)
@@ -399,6 +402,9 @@ def embed_id(frame, distributor_id):
     return flat.reshape(frame.shape).astype(np.uint8)
 
 
+# ===============================
+# Extract ID from frame
+# ===============================
 def extract_id(frame):
     flat = frame.flatten()
     bits = []
@@ -410,21 +416,39 @@ def extract_id(frame):
             if idx < len(flat):
                 votes.append(int(flat[idx]) & 1)
 
-        bits.append('1' if sum(votes) > len(votes)/2 else '0')
+        bits.append('1' if sum(votes) > len(votes) / 2 else '0')
 
     return int(''.join(bits), 2)
 
 
+# ===============================
+# Embed watermark into video
+# ===============================
 def embed_watermark_video(input_path, output_path, distributor_id):
     cap = cv2.VideoCapture(input_path)
 
+    if not cap.isOpened():
+        print("❌ Error opening input video")
+        return 0
+
     fps = cap.get(cv2.CAP_PROP_FPS)
+    if fps <= 0 or fps is None:
+        fps = 30
+
     w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-    # ✅ LOSSLESS codec
+    if w == 0 or h == 0:
+        print("❌ Invalid video dimensions")
+        return 0
+
+    # 🔥 LOSSLESS codec (critical for accuracy)
     fourcc = cv2.VideoWriter_fourcc(*'FFV1')
     out = cv2.VideoWriter(output_path, fourcc, fps, (w, h))
+
+    if not out.isOpened():
+        print("❌ VideoWriter failed")
+        return 0
 
     count = 0
 
@@ -433,6 +457,9 @@ def embed_watermark_video(input_path, output_path, distributor_id):
         if not ret:
             break
 
+        if frame is None:
+            continue
+
         watermarked = embed_id(frame, distributor_id)
         out.write(watermarked)
         count += 1
@@ -440,23 +467,34 @@ def embed_watermark_video(input_path, output_path, distributor_id):
     cap.release()
     out.release()
 
-    print(f"Done. {count} frames watermarked -> {output_path}")
+    print(f"✅ Done. {count} frames watermarked → {output_path}")
     return count
 
 
+# ===============================
+# Extract watermark from video
+# ===============================
 def extract_watermark_video(video_path):
     cap = cv2.VideoCapture(video_path)
+
+    if not cap.isOpened():
+        print("❌ Error opening video")
+        return None
 
     ret, frame = cap.read()
     cap.release()
 
-    if not ret:
+    if not ret or frame is None:
         return None
 
     return extract_id(frame)
 
 
+# ===============================
+# TEST RUN
+# ===============================
 if __name__ == "__main__":
+
     # ✅ Create test video (LOSSLESS)
     fourcc = cv2.VideoWriter_fourcc(*'FFV1')
     writer = cv2.VideoWriter('test.avi', fourcc, 10.0, (640, 480))
@@ -467,17 +505,17 @@ if __name__ == "__main__":
         writer.write(f)
 
     writer.release()
-    print("Test video created")
+    print("🎥 Test video created")
 
-    # ✅ Watermark
+    # ✅ Watermark embed
     embed_watermark_video('test.avi', 'test_watermarked.avi', 7)
 
-    # ✅ Extract
+    # ✅ Extract watermark
     result = extract_watermark_video('test_watermarked.avi')
 
     print(f"Embedded: 7 | Extracted: {result}")
 
     if result == 7:
-        print("SUCCESS - video watermarking works!")
+        print("✅ SUCCESS - video watermarking works!")
     else:
-        print(f"FAILED - got {result}")
+        print(f"❌ FAILED - got {result}")
