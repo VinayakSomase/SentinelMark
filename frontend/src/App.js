@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import RegisterAsset from "./pages/RegisterAsset";
 import DetectLeak from "./pages/DetectLeak";
-
+const API = "http://127.0.0.1:8000";
 function App() {
   return (
     <Router>

@@ -1,0 +1,23 @@
+[
+    {
+        "trap_id": "TRAP-B30B9B",
+        "modification": "Hue shift +10",
+        "file": "honeypots/TRAP-B30B9B_hue_shift.avi",
+        "frames": 30,
+        "status": "active"
+    },
+    {
+        "trap_id": "TRAP-FBE1D4",
+        "modification": "Brightness +15",
+        "file": "honeypots/TRAP-FBE1D4_brightness.avi",
+        "frames": 30,
+        "status": "active"
+    },
+    {
+        "trap_id": "TRAP-5444F5",
+        "modification": "Crop 3% edges",
+        "file": "honeypots/TRAP-5444F5_crop.avi",
+        "frames": 30,
+        "status": "active"
+    }
+]
