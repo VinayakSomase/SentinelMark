@@ -90,7 +90,7 @@ def generate_evidence_report(asset_id, distributor_name,
     elements.append(Paragraph("Digital Piracy Intelligence System", styles['Normal']))
     elements.append(Spacer(1, 10))
 
-    report_id = str(uuid.uuid4())[:8].upper()
+    report_id = f"CASE-{datetime.now().strftime('%Y%m%d%H%M%S')}"
     elements.append(Paragraph(f"Report ID: <b>{report_id}</b>", styles['Normal']))
     elements.append(Spacer(1, 20))
 
@@ -117,7 +117,7 @@ def generate_evidence_report(asset_id, distributor_name,
     # ===== DATA TABLE =====
     data = [
         ["Asset ID", asset_id],
-        ["Leaked By", f"<b>{distributor_name}</b>"],
+        ["Leaked By", distributor_name],
         ["Registered At", registered_at],
         ["Detected At", detected_at],
         ["Confidence", f"{confidence}%"],

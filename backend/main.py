@@ -531,16 +531,13 @@ async def register_asset(
     asset_id = str(uuid.uuid4())[:8].upper()
     os.makedirs("uploads", exist_ok=True)
 
-    # Save original file
     original_path = f"uploads/original_{asset_id}_{file.filename}"
     with open(original_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
-    # Apply watermark
     watermarked_path = f"uploads/watermarked_{asset_id}.avi"
     embed_watermark_video(original_path, watermarked_path, distributor_id)
 
-    # Store data
     registered_assets[asset_id] = {
         "asset_id": asset_id,
         "distributor_id": distributor_id,
@@ -549,7 +546,6 @@ async def register_asset(
         "watermarked_file": watermarked_path
     }
 
-    # ✅ LOG
     access_logs.append({
         "distributor_id": distributor_id,
         "action": "register_asset",
@@ -566,17 +562,32 @@ async def register_asset(
 # ---------------- DETECT LEAK ----------------
 @app.post("/api/detect-leak")
 async def detect_leak(file: UploadFile = File(...)):
-    os.makedirs("uploads", exist_ok=True)
+    try:
+        # ✅ STEP 1: FILE TYPE VALIDATION (VERY IMPORTANT)
+        if not file.filename.lower().endswith((".mp4", ".avi", ".mov")):
+            return {
+                "leak_detected": False,
+                "message": "Invalid file type. Please upload a video file."
+            }
 
-    suspect_path = f"uploads/suspect_{uuid.uuid4().hex[:6]}.avi"
-    with open(suspect_path, "wb") as f:
-        shutil.copyfileobj(file.file, f)
+        os.makedirs("uploads", exist_ok=True)
 
-    watermark_id = extract_watermark_video(suspect_path)
+        suspect_path = f"uploads/suspect_{uuid.uuid4().hex[:6]}.avi"
+        with open(suspect_path, "wb") as f:
+            shutil.copyfileobj(file.file, f)
 
-    if watermark_id and watermark_id in distributors:
+        # Extract watermark
+        watermark_id = extract_watermark_video(suspect_path)
+
+        if not watermark_id:
+            return {"leak_detected": False, "message": "No watermark found"}
+
+        if watermark_id not in distributors:
+            return {"leak_detected": False, "message": "Invalid distributor"}
+
         distributor = distributors[watermark_id]
 
+        # Generate PDF
         report_path = f"uploads/evidence_{uuid.uuid4().hex[:6]}.pdf"
         generate_evidence_report(
             asset_id="AUTO-DETECT",
@@ -603,7 +614,12 @@ async def detect_leak(file: UploadFile = File(...)):
             "evidence_report": report_path
         }
 
-    return {"leak_detected": False, "message": "No watermark found"}
+    except Exception as e:
+        print("❌ ERROR:", str(e))
+        return {
+            "leak_detected": False,
+            "message": "Internal error while processing video. Please try again."
+        }
 
 # ---------------- RISK SCORING ----------------
 def calculate_risk_score(distributor_id):
@@ -623,7 +639,6 @@ def calculate_risk_score(distributor_id):
 
 @app.get("/api/risk-scores")
 def get_risk_scores():
-    # ✅ LOG
     access_logs.append({
         "distributor_id": 0,
         "action": "get_risk_scores",
