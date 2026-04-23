@@ -1,8 +1,14 @@
 /* ── SentinelMark Global Styles ── */
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   background: #0a0f1a;
@@ -10,6 +16,14 @@ body {
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  overflow-x: hidden;   /* ✅ prevent horizontal scroll */
+  width: 100%;
+}
+
+/* ✅ Prevent any page from breaking layout */
+#root {
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -28,19 +42,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── Selection ── */
-::selection { background: rgba(29,78,216,0.3); color: #f1f5f9; }
-
-/* ── Focus visible ── */
-:focus-visible { outline: 2px solid rgba(59,130,246,0.5); outline-offset: 2px; }
-
-/* ── Page padding for fixed navbar ── */
-#root > div > div:not(nav) {
-  padding-top: 64px;
+::selection {
+  background: rgba(29,78,216,0.3);
+  color: #f1f5f9;
 }
 
-/* ── Page wrapper ── */
+/* ── Focus visible ── */
+:focus-visible {
+  outline: 2px solid rgba(59,130,246,0.5);
+  outline-offset: 2px;
+}
+
+/* ── Page wrapper (for fixed navbar spacing) ── */
 .page-wrapper {
-  padding-top: 64px;
+  padding-top: 64px;   /* height of navbar */
+  width: 100%;
 }
 
 /* ── Utility classes ── */
@@ -76,6 +92,7 @@ input  { font-family: inherit; }
 @media (max-width: 768px) {
   .hide-mobile { display: none !important; }
 }
+
 @media (min-width: 769px) {
   .hide-desktop { display: none !important; }
 }

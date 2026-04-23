@@ -1,9 +1,12 @@
+
 import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
   { label: "Home", to: "/" },
   { label: "Register Asset", to: "/register" },
   { label: "Detect Leak", to: "/detect" },
+  { label: "Honeypot", to: "/honeypot" },
+  { label: "Risk Monitor", to: "/risk" },
 ];
 
 function Navbar() {
@@ -12,7 +15,8 @@ function Navbar() {
   return (
     <nav style={styles.nav}>
       <div style={styles.navInner}>
-        {/* Logo */}
+        
+        {/* LEFT: LOGO */}
         <Link to="/" style={styles.logo}>
           <span style={styles.logoIcon}>🛡️</span>
           <div>
@@ -21,8 +25,8 @@ function Navbar() {
           </div>
         </Link>
 
-        {/* Nav Links - each highlights when active */}
-        <div style={styles.navLinks}>
+        {/* RIGHT SIDE */}
+        <div style={styles.navRight}>
           {navLinks.map((link) => {
             const isActive =
               link.to === "/"
@@ -44,6 +48,7 @@ function Navbar() {
             );
           })}
         </div>
+
       </div>
     </nav>
   );
@@ -61,67 +66,74 @@ const styles = {
     borderBottom: "1px solid rgba(255,255,255,0.06)",
     fontFamily: "'DM Sans', sans-serif",
   },
+
   navInner: {
-    maxWidth: "1100px",
-    margin: "0 auto",
+    width: "100%",                  // ✅ full width
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    padding: "0 1.5rem",
+    padding: "0 16px",              // smaller padding
     height: "64px",
+    boxSizing: "border-box",
   },
+
   logo: {
     display: "flex",
     alignItems: "center",
     gap: "10px",
     textDecoration: "none",
+    flexShrink: 0,
   },
+
   logoIcon: { fontSize: "20px" },
+
   logoText: {
     fontFamily: "'Syne', sans-serif",
     fontSize: "16px",
     fontWeight: "700",
-    letterSpacing: "-0.01em",
-    lineHeight: 1.2,
     color: "#ffffff",
   },
+
   logoSub: {
     fontSize: "9px",
     color: "#3b82f6",
     letterSpacing: "0.08em",
-    fontWeight: "500",
   },
-  navLinks: {
+
+  /* 🔥 RIGHT ALIGN FIX */
+  navRight: {
     display: "flex",
     alignItems: "center",
-    gap: "4px",
+    gap: "14px",
+    marginLeft: "auto",   // ✅ pushes fully right
+    paddingRight: "4px",  // ✅ tiny edge spacing
   },
+
   navLink: {
-    position: "relative",
-    padding: "8px 16px",
+    padding: "8px 12px",
     borderRadius: "8px",
     fontSize: "14px",
-    fontWeight: "500",
-    color: "rgba(255,255,255,0.55)",
+    color: "rgba(255,255,255,0.6)",
     textDecoration: "none",
-    transition: "color 0.2s ease, background 0.2s ease",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     gap: "4px",
+    whiteSpace: "nowrap",
   },
+
   navLinkActive: {
     color: "#ffffff",
     background: "rgba(59, 130, 246, 0.15)",
     border: "1px solid rgba(59, 130, 246, 0.3)",
   },
+
   activeDot: {
     width: "4px",
     height: "4px",
     borderRadius: "50%",
     background: "#3b82f6",
-    display: "block",
   },
 };
 
 export default Navbar;
+

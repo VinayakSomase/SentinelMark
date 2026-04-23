@@ -329,34 +329,149 @@ function Home() {
           </div>
         </div>
       </section>
+{/* ══ CTA ══ */}
+<section style={styles.ctaSection}>
+  <div style={styles.sectionInner}>
+    <div className="animate-section" style={{ textAlign: "center" }}>
+      <h2 style={styles.ctaTitle}>Protect your content today</h2>
+      <p style={styles.ctaSub}>
+        Choose your action and get started in seconds.
+      </p>
+    </div>
 
-      {/* ══ CTA ══ */}
-      <section style={styles.ctaSection}>
-        <div style={styles.sectionInner}>
-          <div className="animate-section" style={{ textAlign:"center" }}>
-            <h2 style={styles.ctaTitle}>Protect your content today</h2>
-            <p style={styles.ctaSub}>Choose your action and get started in seconds.</p>
+    <div
+      style={{
+        display: "grid", // 🔥 changed from flex
+        gridTemplateColumns: "repeat(2, 1fr)", // 🔥 force 2x2
+        gap: "20px",
+        maxWidth: "700px",
+        margin: "0 auto",
+      }}
+    >
+      {[
+        {
+          border: "1px solid rgba(29,78,216,0.6)",
+          shadow: "0 0 40px rgba(29,78,216,0.18)",
+          icon: "🎬",
+          badge: "Most Popular",
+          badgeBg: "rgba(29,78,216,0.2)",
+          badgeColor: "#93c5fd",
+          title: "Register Asset",
+          text: "Watermark and protect your video from piracy with military-grade forensic embedding.",
+          btnBg: "#1d4ed8",
+          btnBorder: "#3b82f6",
+          btnColor: "white",
+          btnText: "Register Now →",
+          link: "/register",
+        },
+
+        {
+          border: "1px solid #1e3a5f",
+          shadow: "none",
+          icon: "🕵️",
+          badge: null,
+          title: "Detect Leak",
+          text: "Find the exact source of any leaked video instantly using our AI watermark analysis engine.",
+          btnBg: "rgba(239,68,68,0.12)",
+          btnBorder: "rgba(239,68,68,0.4)",
+          btnColor: "#f87171",
+          btnText: "Detect Source →",
+          link: "/detect",
+        },
+
+        {
+          border: "1px solid #1e3a5f",
+          shadow: "none",
+          icon: "🧪",
+          badge: null,
+          title: "Honeypot",
+          text: "Deploy decoy content to trap unauthorized distributors and monitor leak activity.",
+          btnBg: "rgba(168,85,247,0.12)",
+          btnBorder: "rgba(168,85,247,0.4)",
+          btnColor: "#c084fc",
+          btnText: "Create Honeypot →",
+          link: "/honeypot",
+        },
+
+        {
+          border: "1px solid #1e3a5f",
+          shadow: "none",
+          icon: "📊",
+          badge: null,
+          title: "Risk Monitor",
+          text: "Track distributor behavior and detect suspicious activity before leaks occur.",
+          btnBg: "rgba(34,197,94,0.12)",
+          btnBorder: "rgba(34,197,94,0.4)",
+          btnColor: "#4ade80",
+          btnText: "View Dashboard →",
+          link: "/risk",
+        },
+      ].map((c, i) => (
+        <div
+          key={i}
+          className="cta-card animate-section"
+          style={{
+            background: "#0a1628",
+            borderRadius: "16px",
+            padding: "2rem",
+            // ❌ removed width: "300px"
+            textAlign: "left",
+            border: c.border,
+            boxShadow: c.shadow,
+            transitionDelay: `${i * 0.12}s`,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1.1rem",
+            }}
+          >
+            <span style={{ fontSize: "28px" }}>{c.icon}</span>
+            {c.badge && (
+              <span
+                style={{
+                  fontSize: "11px",
+                  padding: "3px 12px",
+                  borderRadius: "100px",
+                  fontWeight: "600",
+                  letterSpacing: "0.04em",
+                  background: c.badgeBg,
+                  color: c.badgeColor,
+                }}
+              >
+                {c.badge}
+              </span>
+            )}
           </div>
-          <div style={{ display:"flex", gap:"1.5rem", justifyContent:"center", flexWrap:"wrap" }}>
-            {[
-              { border:"1px solid rgba(29,78,216,0.6)", shadow:"0 0 40px rgba(29,78,216,0.18)", icon:"🎬", badge:"Most Popular", badgeBg:"rgba(29,78,216,0.2)", badgeColor:"#93c5fd", title:"Register Asset", text:"Watermark and protect your video from piracy with military-grade forensic embedding.", btnBg:"#1d4ed8", btnBorder:"#3b82f6", btnColor:"white", btnText:"Register Now →", link:"/register" },
-              { border:"1px solid #1e3a5f", shadow:"none", icon:"🕵️", badge:null, title:"Detect Leak", text:"Find the exact source of any leaked video instantly using our AI watermark analysis engine.", btnBg:"rgba(239,68,68,0.12)", btnBorder:"rgba(239,68,68,0.4)", btnColor:"#f87171", btnText:"Detect Source →", link:"/detect" },
-            ].map((c, i) => (
-              <div key={i} className="cta-card animate-section" style={{ background:"#0a1628", borderRadius:"16px", padding:"2rem", width:"300px", textAlign:"left", border:c.border, boxShadow:c.shadow, transitionDelay:`${i*0.12}s` }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"1.1rem" }}>
-                  <span style={{ fontSize:"28px" }}>{c.icon}</span>
-                  {c.badge && <span style={{ fontSize:"11px", padding:"3px 12px", borderRadius:"100px", fontWeight:"600", letterSpacing:"0.04em", background:c.badgeBg, color:c.badgeColor }}>{c.badge}</span>}
-                </div>
-                <h3 style={styles.ctaCardTitle}>{c.title}</h3>
-                <p style={styles.ctaCardText}>{c.text}</p>
-                <Link to={c.link} style={{ display:"inline-block", padding:"12px 24px", background:c.btnBg, color:c.btnColor, border:`1px solid ${c.btnBorder}`, borderRadius:"8px", fontSize:"14px", textDecoration:"none", fontWeight:"600", fontFamily:"'DM Sans', sans-serif" }}>
-                  {c.btnText}
-                </Link>
-              </div>
-            ))}
-          </div>
+
+          <h3 style={styles.ctaCardTitle}>{c.title}</h3>
+          <p style={styles.ctaCardText}>{c.text}</p>
+
+          <Link
+            to={c.link}
+            style={{
+              display: "inline-block",
+              padding: "12px 24px",
+              background: c.btnBg,
+              color: c.btnColor,
+              border: `1px solid ${c.btnBorder}`,
+              borderRadius: "8px",
+              fontSize: "14px",
+              textDecoration: "none",
+              fontWeight: "600",
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            {c.btnText}
+          </Link>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ══ FOOTER ══ */}
       <footer style={styles.footer}>
@@ -437,3 +552,5 @@ const styles = {
 };
 
 export default Home;
+
+

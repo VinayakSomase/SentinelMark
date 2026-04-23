@@ -1,22 +1,22 @@
 [
     {
-        "trap_id": "TRAP-B30B9B",
+        "trap_id": "TRAP-3E674B",
         "modification": "Hue shift +10",
-        "file": "honeypots/TRAP-B30B9B_hue_shift.avi",
+        "file": "honeypots/TRAP-3E674B_hue_shift.avi",
         "frames": 30,
         "status": "active"
     },
     {
-        "trap_id": "TRAP-FBE1D4",
+        "trap_id": "TRAP-CC4D35",
         "modification": "Brightness +15",
-        "file": "honeypots/TRAP-FBE1D4_brightness.avi",
+        "file": "honeypots/TRAP-CC4D35_brightness.avi",
         "frames": 30,
         "status": "active"
     },
     {
-        "trap_id": "TRAP-5444F5",
+        "trap_id": "TRAP-84AA24",
         "modification": "Crop 3% edges",
-        "file": "honeypots/TRAP-5444F5_crop.avi",
+        "file": "honeypots/TRAP-84AA24_crop.avi",
         "frames": 30,
         "status": "active"
     }
