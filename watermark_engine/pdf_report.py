@@ -64,7 +64,7 @@
 #     )
 #     print("Open evidence_report.pdf in your folder to check it")
 
-print("RUNNING PDF FILE...")
+# print("RUNNING PDF FILE...")
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
@@ -190,3 +190,4 @@ if __name__ == "__main__":
         confidence=97.4,
         output_path=output_path
     )
+

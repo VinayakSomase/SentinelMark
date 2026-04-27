@@ -21,32 +21,56 @@ function RegisterAsset() {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = () => {
-    if (!selectedDistributor || !video) {
-      alert("Please select a distributor and upload a video.");
-      return;
-    }
-    setLoading(true);
-    setProgress(0);
+  const handleSubmit = async () => {
+  if (!selectedDistributor || !video) {
+    alert("Please select a distributor and upload a video.");
+    return;
+  }
 
-    const steps = [
-      { p: 15, t: 400 },
-      { p: 35, t: 700 },
-      { p: 60, t: 600 },
-      { p: 80, t: 500 },
-      { p: 95, t: 400 },
-      { p: 100, t: 300 },
-    ];
-    let delay = 0;
-    steps.forEach(({ p, t }) => {
-      delay += t;
-      setTimeout(() => setProgress(p), delay);
+  setLoading(true);
+  setProgress(10);
+
+  try {
+    const distributorMap = {
+      "Star Sports": 2,
+      "Sony Liv": 3,
+      "JioCinema": 4,
+      "Zee Sports": 5,
+      "Other": 1
+    };
+
+    const distributor_id = distributorMap[selectedDistributor];
+
+    const formData = new FormData();
+    formData.append("distributor_id", distributor_id);
+    formData.append("file", video);
+
+    const res = await fetch("http://127.0.0.1:8000/api/register-asset", {
+      method: "POST",
+      body: formData
     });
-    setTimeout(() => {
-      setLoading(false);
+
+    setProgress(50);
+
+    const data = await res.json();
+    console.log("Backend:", data);
+
+    setProgress(80);
+
+    if (data.success) {
+      setProgress(100);
       setSuccess(true);
-    }, delay + 200);
-  };
+    } else {
+      alert("Upload failed");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Backend connection error");
+  }
+
+  setLoading(false);
+};
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -430,3 +454,145 @@ const styles = {
 };
 
 export default RegisterAsset;
+
+
+// import React, { useState, useEffect } from "react";
+
+// function RegisterAsset() {
+//   const [selectedDistributor, setSelectedDistributor] = useState("");
+//   const [video, setVideo] = useState(null);
+//   const [loading, setLoading] = useState(false);
+//   const [success, setSuccess] = useState(false);
+//   const [progress, setProgress] = useState(0);
+//   const [dragOver, setDragOver] = useState(false);
+
+//   useEffect(() => {
+//     const observer = new IntersectionObserver(
+//       (entries) => {
+//         entries.forEach((entry) => {
+//           if (entry.isIntersecting) entry.target.classList.add("in-view");
+//         });
+//       },
+//       { threshold: 0.1 }
+//     );
+//     document.querySelectorAll(".animate-section").forEach((el) => observer.observe(el));
+//     return () => observer.disconnect();
+//   }, []);
+
+//   // ✅ FIXED FUNCTION (REAL BACKEND CONNECTION)
+//   const handleSubmit = async () => {
+//     if (!selectedDistributor || !video) {
+//       alert("Please select a distributor and upload a video.");
+//       return;
+//     }
+
+//     setLoading(true);
+//     setProgress(20);
+
+//     try {
+//       // map UI → backend IDs
+//       const distributorMap = {
+//         "Star Sports": 1,
+//         "Sony Liv": 2,
+//         "JioCinema": 3,
+//         "Zee Sports": 4,
+//         "Other": 5
+//       };
+
+//       const distributor_id = distributorMap[selectedDistributor];
+
+//       const formData = new FormData();
+//       formData.append("distributor_id", distributor_id);
+//       formData.append("file", video);
+
+//       const res = await fetch("http://127.0.0.1:8000/api/register-asset", {
+//         method: "POST",
+//         body: formData
+//       });
+
+//       const data = await res.json();
+//       console.log("Backend response:", data);
+
+//       if (data.success) {
+//         setProgress(100);
+//         setSuccess(true);
+//       } else {
+//         alert("Upload failed");
+//       }
+
+//     } catch (err) {
+//       console.error(err);
+//       alert("Backend not connected");
+//     }
+
+//     setLoading(false);
+//   };
+
+//   const handleDrop = (e) => {
+//     e.preventDefault();
+//     setDragOver(false);
+//     const file = e.dataTransfer.files[0];
+//     if (file && file.type.startsWith("video/")) setVideo(file);
+//   };
+
+//   return (
+//     <div style={styles.page}>
+      
+//       <section style={styles.formSection}>
+
+//         {/* FORM CARD */}
+//         <div style={styles.card}>
+//           {success ? (
+//             <div style={styles.successBox}>
+//               <h2 style={styles.successTitle}>✅ Asset Registered!</h2>
+//               <p>
+//                 Watermark applied successfully for <b>{selectedDistributor}</b>
+//               </p>
+//             </div>
+//           ) : (
+//             <>
+//               <h2>Upload & Watermark</h2>
+
+//               {/* DISTRIBUTOR */}
+//               <select
+//                 value={selectedDistributor}
+//                 onChange={(e) => setSelectedDistributor(e.target.value)}
+//               >
+//                 <option value="">Choose distributor</option>
+//                 <option>Star Sports</option>
+//                 <option>Sony Liv</option>
+//                 <option>JioCinema</option>
+//                 <option>Zee Sports</option>
+//                 <option>Other</option>
+//               </select>
+
+//               {/* FILE */}
+//               <input
+//                 type="file"
+//                 accept="video/*"
+//                 onChange={(e) => setVideo(e.target.files[0])}
+//               />
+
+//               <button onClick={handleSubmit} disabled={loading}>
+//                 {loading ? "Uploading..." : "Secure & Watermark"}
+//               </button>
+
+//               <div>Progress: {progress}%</div>
+//             </>
+//           )}
+//         </div>
+
+//       </section>
+//     </div>
+//   );
+// }
+
+// const styles = {
+//   page: { padding: "20px", color: "white", background: "#0a0f1a", minHeight: "100vh" },
+//   formSection: { display: "flex", justifyContent: "center" },
+//   card: { padding: "20px", background: "#111827", borderRadius: "10px" },
+//   successBox: { textAlign: "center" },
+//   successTitle: { color: "green" }
+// };
+
+// export default RegisterAsset;

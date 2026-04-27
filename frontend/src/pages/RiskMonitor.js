@@ -299,23 +299,54 @@ function RiskMonitor() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/risk-scores");
+      const res = await fetch("http://127.0.0.1:8000/api/logs");
       const data = await res.json();
 
-      setRiskData(data.risk_scores);
+      // const logs = data.logs;
+      const logs = data.logs
+        .filter((log) => log.action === "honeypot_access")
+        .slice(-10);   // 🔥 ONLY LAST 10 LOGS
+
+      //  SORT logs by time
+      logs.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+      let cumulativeScore = 0;
+
+      const riskArray = logs.map((log) => {
+        cumulativeScore += 30;
+
+        return {
+          id: log.timestamp,
+          name: new Date(log.timestamp).toLocaleTimeString(),
+          score: cumulativeScore,
+          level:
+            cumulativeScore >= 80
+            ? "high"
+            : cumulativeScore >= 40
+            ? "medium"
+            : "low",
+        };
+      });
+
+
+
+      setRiskData(riskArray);
       setError("");
 
-      if (data.risk_scores.some((d) => d.level === "high")) {
+      if (riskArray.some((d) => d.level === "high")) {
         setAlert("⚠️ High Risk Distributor Detected!");
       } else {
         setAlert("");
       }
+
     } catch (err) {
       setError("Failed to load data");
     } finally {
       setLoading(false);
     }
   };
+
+  
 
   useEffect(() => {
     fetchData();

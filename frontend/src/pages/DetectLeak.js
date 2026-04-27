@@ -39,39 +39,68 @@ function DetectLeak() {
     }
   }, [result]);
 
-  const handleDetect = () => {
-    if (!video) { alert("Please upload a video first."); return; }
-    setLoading(true);
-    setResult(null);
-    setProgress(0);
+  const handleDetect = async () => {
+  if (!video) {
+    alert("Please upload a video first.");
+    return;
+  }
+
+  setLoading(true);
+  setResult(null);
+  setProgress(10);
+  setCurrentPhase("Uploading video...");
+
+  try {
+    const formData = new FormData();
+    formData.append("file", video);
+
+    const res = await fetch("http://127.0.0.1:8000/api/detect-leak", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
 
     const phases = [
-      { phase: "Extracting video frames...", p: 20, t: 500 },
-      { phase: "Scanning for watermark signature...", p: 45, t: 700 },
-      { phase: "Decrypting forensic payload...", p: 65, t: 600 },
-      { phase: "Matching distributor database...", p: 85, t: 500 },
-      { phase: "Generating report...", p: 98, t: 400 },
+      { phase: "Extracting video frames...", p: 30, t: 400 },
+      { phase: "Scanning watermark...", p: 60, t: 600 },
+      { phase: "Matching distributor...", p: 85, t: 500 },
     ];
 
     let delay = 0;
     phases.forEach(({ phase, p, t }) => {
       delay += t;
-      setTimeout(() => { setCurrentPhase(phase); setProgress(p); }, delay);
+      setTimeout(() => {
+        setCurrentPhase(phase);
+        setProgress(p);
+      }, delay);
     });
 
     setTimeout(() => {
       setLoading(false);
       setProgress(100);
-      setResult({
-        source: "Sony Liv",
-        confidence: 97,
-        distributorId: "DIST-SL-00421",
-        detectedAt: new Date().toLocaleString(),
-        region: "South Asia",
-        riskLevel: "HIGH",
-      });
-    }, delay + 300);
-  };
+
+      if (data.leak_detected) {
+        setResult({
+          source: data.distributor_name,
+          confidence: Math.round(data.confidence),
+          distributorId: data.distributor_id || "N/A",
+          detectedAt: data.detected_at,
+          region: "India",
+          riskLevel: data.confidence > 75 ? "HIGH" : "LOW",
+          report: data.evidence_report,
+        });
+      } else {
+        alert(data.message || "No watermark found");
+      }
+    }, delay + 500);
+
+  } catch (err) {
+    console.error(err);
+    setLoading(false);
+    alert("Backend not connected ❌");
+  }
+};
 
   return (
     <div style={styles.page}>
@@ -215,7 +244,16 @@ function DetectLeak() {
                   <span style={{ ...styles.resultVal, color: row.color }}>{row.val}</span>
                 </div>
               ))}
-              <button className="report-btn">📄 Download Full Report</button>
+              <button
+                className="report-btn"
+                onClick={() => {
+                  const url = `http://127.0.0.1:8000/${result.report}`;
+                  console.log("Opening:", url);
+                  window.open(url, "_blank");
+                }}
+              >
+                📄 Download Full Report
+              </button>
             </div>
           )}
         </div>
@@ -297,3 +335,7 @@ const styles = {
 };
 
 export default DetectLeak;
+
+
+
+
