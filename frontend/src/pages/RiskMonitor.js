@@ -19,7 +19,7 @@
 
 //   const fetchData = async () => {
 //     try {
-//       const res = await fetch("http://127.0.0.1:8000/api/risk-scores");
+//       const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/risk-scores");
 //       const data = await res.json();
 
 //       setRiskData(data.risk_scores);
@@ -299,7 +299,8 @@ function RiskMonitor() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/logs");
+      // const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/logs");
+      const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/logs");
       const data = await res.json();
 
       // const logs = data.logs;

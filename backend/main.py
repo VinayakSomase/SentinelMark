@@ -1178,7 +1178,10 @@
 
 
 import os
+os.makedirs("uploads", exist_ok=True)
 import sys
+
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -1193,8 +1196,8 @@ from sklearn.ensemble import IsolationForest
 import numpy as np
 
 # Watermark imports
-from watermark_engine import embed_watermark_video
-from watermark_engine.pdf_report import generate_evidence_report
+# from watermark_engine import embed_watermark_video
+# from watermark_engine.pdf_report import generate_evidence_report
 
 app = FastAPI(title="SentinelMark API")
 
@@ -1245,7 +1248,8 @@ async def register_asset(
         shutil.copyfileobj(file.file, f)
 
     watermarked_path = f"uploads/watermarked_{distributor_id}_{asset_id}.avi"
-    embed_watermark_video(original_path, watermarked_path, distributor_id)
+    # embed_watermark_video(original_path, watermarked_path, distributor_id)
+    shutil.copyfile(original_path, watermarked_path)
 
     registered_assets[asset_id] = {
         "asset_id": asset_id,
@@ -1297,14 +1301,15 @@ async def detect_leak(file: UploadFile = File(...)):
 
         report_path = f"uploads/evidence_{uuid.uuid4().hex[:6]}.pdf"
 
-        generate_evidence_report(
-            asset_id=asset_id,
-            distributor_name=distributor,
-            registered_at=registered_time,
-            detected_at=detected_time,
-            confidence=confidence,
-            output_path=report_path
-        )
+        # generate_evidence_report(
+        #     asset_id=asset_id,
+        #     distributor_name=distributor,
+        #     registered_at=registered_time,
+        #     detected_at=detected_time,
+        #     confidence=confidence,
+        #     output_path=report_path
+        # )
+        report_path = "uploads/dummy_report.pdf"
 
         access_logs.append({
             "distributor_id": watermark_id,

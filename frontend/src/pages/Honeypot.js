@@ -315,7 +315,7 @@
 //     formData.append("name", file.name);
 
 //     try {
-//       const res = await fetch("http://127.0.0.1:8000/api/create-honeypot", {
+//       const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/create-honeypot", {
 //         method: "POST",
 //         body: formData,
 //       });
@@ -347,7 +347,7 @@
 //     formData.append("honeypot_id", honeypotId);
 //     formData.append("ip", "192.168.1.10");
 
-//     await fetch("http://127.0.0.1:8000/api/honeypot-access", {
+//     await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/honeypot-access", {
 //       method: "POST",
 //       body: formData,
 //     });
@@ -660,7 +660,8 @@ function Honeypot() {
     formData.append("name", file.name);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/create-honeypot", {
+      // const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/create-honeypot", {
+      const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/create-honeypot", {
         method: "POST",
         body: formData,
       });
@@ -691,7 +692,8 @@ function Honeypot() {
     formData.append("honeypot_id", honeypotId);
     formData.append("ip", "192.168.1.10");
 
-    await fetch("http://127.0.0.1:8000/api/honeypot-access", {
+    // await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/honeypot-access", {
+    await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/honeypot-access", {
       method: "POST",
       body: formData,
     });
