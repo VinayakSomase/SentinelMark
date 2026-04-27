@@ -45,7 +45,7 @@ function RegisterAsset() {
     formData.append("distributor_id", distributor_id);
     formData.append("file", video);
 
-    // const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/register-asset", {
+    // const res = await fetch("http://127.0.0.1:8000/api/register-asset", {
     const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/register-asset", {
       method: "POST",
       body: formData
@@ -506,7 +506,7 @@ export default RegisterAsset;
 //       formData.append("distributor_id", distributor_id);
 //       formData.append("file", video);
 
-//       const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/register-asset", {
+//       const res = await fetch("http://127.0.0.1:8000/api/register-asset", {
 //         method: "POST",
 //         body: formData
 //       });

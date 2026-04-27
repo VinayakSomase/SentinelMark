@@ -54,7 +54,7 @@ function DetectLeak() {
     const formData = new FormData();
     formData.append("file", video);
 
-    // const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/detect-leak", {
+    // const res = await fetch("http://127.0.0.1:8000/api/detect-leak", {
     const res = await fetch("https://sentinelmark-api-978015493076.asia-south1.run.app/api/detect-leak", {
       method: "POST",
       body: formData,
@@ -248,7 +248,7 @@ function DetectLeak() {
               <button
                 className="report-btn"
                 onClick={() => {
-                  // const url = `https://sentinelmark-api-978015493076.asia-south1.run.app/${result.report}`;
+                  // const url = `http://127.0.0.1:8000/${result.report}`;
                   const url = `https://sentinelmark-api-978015493076.asia-south1.run.app/${result.report}`;
                   console.log("Opening:", url);
                   window.open(url, "_blank");
