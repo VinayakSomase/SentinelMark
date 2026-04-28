@@ -1,71 +1,110 @@
-# Getting Started with Create React App
+# SentinelMark  
+# AI-Powered Anti-Piracy & Leak Detection System  
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+*Live Demo:* https://sentinel-mark.vercel.app/  
 
-## Available Scripts
 
-In the project directory, you can run:
+#  Overview
 
-### `npm start`
+SentinelMark protects sports media by embedding invisible watermarks, predicting leaks before they happen, and
+proactively trapping piracy networks.
+  
+It combines **invisible watermarking**, **honeypot traps**, and **behavioral risk analytics** to identify suspicious distributors and prevent large-scale piracy.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Problem Statement
 
-### `npm test`
+"Sports organizations distribute official media to authorized broadcasters. This content gets leaked and pirated before official broadcast windows, causing massive revenue loss. No accessible tool exists to identify the source of a leak forensically, predict which distributor will leak, or map the piracy networks distributing stolen content."
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+# Our Solution
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+SentinelMark solves this problem by:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+"SentinelMark is a three-layer intelligent protection system. 
+Layer 1 embeds unique invisible watermarks per distributor and identifies leak sources forensically. 
+Layer 2 monitors access behavior using anomaly detection to predict leaks before they happen. 
+Layer 3 generates AI-modified honeypot content variants to proactively map piracy distribution networks."
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+# Key Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# Asset Registration
+- Upload digital content  
+- Assign unique distributor identity  
+- Embed invisible watermark  
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Leak Detection
+- Analyze suspicious or leaked content  
+- Extract watermark signature  
+- Identify source distributor  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Honeypot Tracking
+- Create hidden traps for attackers  
+- Detect unauthorized access  
+- Log suspicious activity  
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Risk Monitoring Dashboard
+- Real-time risk scoring  
+- Activity-based analytics  
+- Automatic high-risk flagging  
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# System Architecture
 
-### Code Splitting
+Frontend (React - Vercel)
+↓
+Backend API (FastAPI - Google Cloud Run)
+↓
+Watermarking + Detection + Risk Engine
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+# Tech Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+| Layer        | Technology                       |
+|------------- |----------------------------------|               
+| Frontend     | React.js (Vercel)                |
+| Backend      | FastAPI (Google Cloud Run)       |
+| AI Model     | Isolation Forest (Risk Scoring)  |
+| Deployment   | Vercel + Google Cloud Run        |
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Limitations (MVP Scope)
 
-### Advanced Configuration
+- Uses **temporary (ephemeral) storage** in Cloud Run  
+- Watermark processing optimized for demo performance  
+- Persistent storage (e.g., Google Cloud Storage) can be added in production  
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+# Future Enhancements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Integration with **Google Cloud Storage (GCS)**  
+- DCT-domain watermarking for Phase 2   
+- Real-time alert system  
+- Multi-distributor tracking dashboard  
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# SentinelMark
+# 🎬 Demo Flow
+
+1. Register Asset → Watermark embedded  
+2. Detect Leak → Source identified  
+3. Honeypot → Simulated attack detection  
+4. Risk Monitor → View real-time analytics  
+
+
+# 👨‍💻 Team Members 
+
+Bhupesh Patil
+Vinayak Somase 
+Chanchal Bachhav
+
+
+#  Conclusion
+
+SentinelMark is an intelligent digital asset protection system that predicts potential leaks before they happen, forensically identifies the source of any leak, and proactively traps piracy networks using AI-generated honeypot content.
+
+
+*Built for Google Solution Challenge 2026*
+
+ Thank You.
